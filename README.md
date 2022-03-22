@@ -7,7 +7,7 @@ Convenience library for hyper-parameters management for deep learning developmen
 ## Installation
 
 ```
-pip install git@github.com:Rayhane-mamah/hparams.git
+pip install git+https://github.com/Rayhane-mamah/hparams
 ```
 
 ## Usage
