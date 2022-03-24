@@ -9,6 +9,8 @@ Convenience library for hyper-parameters management for deep learning developmen
 Hparams is a library mainly designed to make Deep learning development and experimentation easy to manage and track:
   
 - Specify all run parameters (number of GPUs, model parameters, train parameters, etc) in one `.cfg` file.  
+- Hparams evaluates any expression used as "value" in the `.cfg` file. "value" can be any basic python object `(floats, strings, lists, etc)` or any python basic expression `(1/2, max
+(3, 7), etc.)` as long as the evaluation does not require any library importations or does not rely on other values from the `.cfg`.
 - Hparams saves the configuration of previous runs for reproducibility, resuming training, etc.  
 - All hparams are saved by name, and re-using the same name will recall the old run instead of making a new one.  
 - The `.cfg` file is split into sections for readability, and all parameters in the file are accessible as class attributes in the codebase for convenience.  
