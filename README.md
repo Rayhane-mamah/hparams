@@ -111,3 +111,5 @@ hparams = HParams('.', gcs_backup_project='some_project_name', gcs_backup_bucket
 ```
 
 The GCS integration of hparams is a simple backup copy. Your local version is always the True one, and the gcs version is its replica.
+
+The GCS backup also automatically appends the run name to the end of the gcs bucket path.

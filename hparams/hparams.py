@@ -17,6 +17,8 @@ class HParams(LocalConfig):
 
         super(HParams, self).__init__()
 
+        self.read(os.path.join(project_path, f"{hparams_filename}.cfg"))
+
         if gcs_backup_project is not None:
             if gcs_backup_bucket is None:
                 raise ValueError(f"GCS bucket must be provided to conduct gcs backup!")
@@ -25,12 +27,10 @@ class HParams(LocalConfig):
                 gcs_backup_bucket = 'gs://' + gcs_backup_bucket
 
             gcs_fs = gcsfs.GCSFileSystem(project=gcs_backup_project)
-            gcs_backup_bucket = gcs_backup_bucket
+            gcs_backup_bucket = os.path.join(gcs_backup_bucket, self.run.name)
 
         else:
             gcs_fs = None
-
-        self.read(os.path.join(project_path, f"{hparams_filename}.cfg"))
 
         # self.update(params_to_override)
 
