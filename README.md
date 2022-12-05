@@ -98,3 +98,16 @@ from hparams import HParams
 # Do not define the extension in the hparams_filename
 hparams = HParams('.', hparams_filename='some_other_cfg_name', name='some_object_name')
 ```
+
+### GCS backup
+
+If your code is saving tensorboard files, model checkpoints or other files to GCS and you want hparams to also back itself up to a GCS bucket:
+
+```python
+from hparams import HParams
+
+# Define both the gcs project name and the gcs bucket path
+hparams = HParams('.', gcs_backup_project='some_project_name', gcs_backup_bucket='some_bucket_path', name='some_name')
+```
+
+The GCS integration of hparams is a simple backup copy. Your local version is always the True one, and the gcs version is its replica.

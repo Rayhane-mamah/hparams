@@ -3,18 +3,32 @@ import io
 from contextlib import redirect_stderr
 import argparse
 import os
+import gcsfs
 
 
 class HParams(LocalConfig):
     _loaded_hparams_objects = {}
 
-    def __init__(self, project_path, hparams_filename="hparams", name="hparams"):
+    def __init__(self, project_path, hparams_filename="hparams", gcs_backup_project=None, gcs_backup_bucket=None, name="hparams"):
         if name in HParams._loaded_hparams_objects.keys():
             raise ValueError(f"hparams {name} is being loaded a second time")
 
         # params_to_override = HParams.override_params()
 
         super(HParams, self).__init__()
+
+        if gcs_backup_project is not None:
+            if gcs_backup_bucket is None:
+                raise ValueError(f"GCS bucket must be provided to conduct gcs backup!")
+
+            if not gcs_backup_bucket.startswith('gs://'):
+                gcs_backup_bucket = 'gs://' + gcs_backup_bucket
+
+            gcs_fs = gcsfs.GCSFileSystem(project=gcs_backup_project)
+            gcs_backup_bucket = gcs_backup_bucket
+
+        else:
+            gcs_fs = None
 
         self.read(os.path.join(project_path, f"{hparams_filename}.cfg"))
 
@@ -35,6 +49,11 @@ class HParams(LocalConfig):
             # Keep a version of the updated config file as backup for replicability
             self.save_config(logfile)
             print('No existing config found. New run config file saved in {}'.format(logfile))
+
+        if gcs_fs is not None:
+            gcs_path = os.path.join(gcs_backup_bucket, os.path.basename(logfile))
+            print(f'Backing up hparams file to {gcs_path}')
+            gcs_fs.put(lpath=logfile, rpath=gcs_path)
 
         self.add_to_global_collections(name)
 
