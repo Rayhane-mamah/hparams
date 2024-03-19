@@ -9,7 +9,8 @@ import gcsfs
 class HParams(LocalConfig):
     _loaded_hparams_objects = {}
 
-    def __init__(self, project_path, hparams_filename="hparams", gcs_backup_project=None, gcs_backup_bucket=None, name="hparams"):
+    def __init__(self, project_path, hparams_filename="hparams", gcs_backup_project=None, gcs_backup_bucket=None,
+                 name="hparams"):
         if name in HParams._loaded_hparams_objects.keys():
             raise ValueError(f"hparams {name} is being loaded a second time")
 
@@ -34,9 +35,9 @@ class HParams(LocalConfig):
 
         # self.update(params_to_override)
 
-        logdir = os.path.join(project_path, 'logs-{}'.format(self.run.name))
+        logdir = os.path.join(project_path, 'logs', self.run.name)
         os.makedirs(logdir, exist_ok=True)
-        logfile = os.path.join(logdir, 'hparams-{}.cfg'.format(self.run.name))
+        logfile = os.path.join(logdir, 'hparams.cfg')
 
         if os.path.isdir(logdir) and os.path.isfile(logfile):
             # If logfile is found, assume we are resuming as old run, so use archived hparams file
